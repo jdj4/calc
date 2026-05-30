@@ -3,6 +3,7 @@
 !*.*
 !*/
 
-# Ignore executables (.out, .exe)
+# Ignore executables and object files (.o, .out, .exe)
+*.o
 *.out
 *.exe

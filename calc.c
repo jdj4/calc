@@ -28,12 +28,14 @@ static void args(int argc, char *arg) {
 }
 
 int main(int argc, char *argv[]) {
-    args(argc, argv[1]);    
+    args(argc, argv[1]);
     size_t n = 0;
     char *line = NULL;
+    TokenPair *tokens;
     while (!feof(stdin)) {
         printf(">>> ");
         while (getline(&line, &n, stdin) > 0) {
+            tokenize(line);
             printf("%s", line);
             break;
         }

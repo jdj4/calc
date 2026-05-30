@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "lexer.h"
+
 #define VERSION "calc 1.0.0"
 #define COPYRIGHT "Copyright (C) 2026 jdj4. All Rights Reserved."
 
