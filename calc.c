@@ -1,16 +1,10 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#define VERSION "calc 1.0.0"
-#define COPYRIGHT "Copyright (C) 2026 jdj4. All Rights Reserved."
+#include "calc.h"
 
 static void print_help_msg(void) {
 }
 
 static void print_welcome_msg(void) {
-    printf(VERSION);
-    puts(" by jdj4");
+    printf(VERSION); puts(" by jdj4");
     puts("Use CLI arg --help for usage information");
 }
 
