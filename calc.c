@@ -20,7 +20,10 @@ static void args(int argc, char *arg) {
             print_help_msg();
             exit(0);
         } else if (strcmp(arg, "-q") == 0) {
-        } else print_welcome_msg();
+        } else {
+            printf("Invalid argument '%s', valid CLI args are --version, --credits, --help, and -q\n\n", arg);
+            print_welcome_msg();
+        }
     } else print_welcome_msg();
 }
 
