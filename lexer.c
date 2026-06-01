@@ -1,13 +1,7 @@
 /*
  * TODO:
- * - Token capture is buggy, example:
- *  - >>> 55 + cli
- *  - NUMBER: 55
- *  - NUMBER: 5
- *  - OP: +
- *  - IDENT: cli
- *  - IDENT: li
- *  - IDENT: i
+ * - Wrong logic for scanning
+ * - `scan_operator` is broken
  * - Cannot return an array from `tokenize`, need dynamic allocation
  */
 #include "lexer.h"
@@ -19,15 +13,13 @@ static int contains(char *str, char c) {
     return 0;
 }
 
-TokenPair *scan_number(char *num) {
-    TokenPair *pair = malloc(sizeof(TokenPair));
-    char *start = num;
-    while (isdigit(*num) || contains(SCI_NOTATION, *num) || *num == '.') num++;
-    //for (ptr = num; isdigit(*ptr) || contains(SCI_NOTATION, *ptr) || *ptr == '.'; ptr++);
+TokenPair *scan_number(char **num) {
+    TokenPair *pair = malloc(sizeof(TokenPair)); // TODO: memcheck
+    char *start = *num;
+    while (isdigit(**num) || contains(SCI_NOTATION, **num) || **num == '.') (*num)++;
     
-    int len = num - start;
-    char *value = malloc(len + 1);
-    if (value == NULL) return NULL;
+    int len = *num - start;
+    char *value = malloc(len + 1); // TODO: memcheck
     memcpy(value, start, len);
     value[len] = '\0';
     
@@ -36,14 +28,13 @@ TokenPair *scan_number(char *num) {
     return pair;
 }
 
-TokenPair *scan_ident(char *ident) {
+TokenPair *scan_ident(char **ident) {
     TokenPair *pair = malloc(sizeof(TokenPair));
-    char *ptr, *start = ident;
-    for (ptr = ident; isalpha(*ptr) || *ptr == '_'; ptr++);
+    char *start = *ident;
+    while (isalpha(**ident) || **ident == '-') (*ident)++;
     
-    int len = ptr - start;
-    char *value = malloc(len + 1);
-    if (value == NULL) return NULL;
+    int len = *ident - start;
+    char *value = malloc(len + 1); // TODO: memcheck
     memcpy(value, start, len);
     value[len] = '\0';
     
@@ -142,21 +133,25 @@ TokenPair *scan_operator(char *op) {
 /*TokenPair **/void tokenize(char *line) {
     TokenPair *tokens[100] = { NULL };
     int i = 0;
-    for (char *ptr = line; *ptr != '\0'; ptr++) {        
-        if (isspace(*ptr)) continue;
+    for (char *ptr = line; *ptr != '\0'; ) {        
+        if (isspace(*ptr)) {
+            ptr++;
+            continue;
+        }
         
         if (isdigit(*ptr)) {
             //TokenPair *pair = scan_number(ptr);
             //printf("%s\n", pair->value);
-            tokens[i] = scan_number(ptr);
+            tokens[i] = scan_number(&ptr);
             printf("NUMBER: %s\n", tokens[i]->value);
         } else if (isalpha(*ptr) || *ptr == '_') {
-            tokens[i] = scan_ident(ptr);
+            tokens[i] = scan_ident(&ptr);
             printf("IDENT: %s\n", tokens[i]->value);
         } else if (contains(OPERATORS, *ptr)) {
             tokens[i] = scan_operator(ptr);
             printf("OP: %s\n", tokens[i]->value);
         } else {
+            ptr++;
             fprintf(stderr, "Error\n");
         }
         i++;

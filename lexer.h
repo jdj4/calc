@@ -5,8 +5,9 @@
 
 #define OPERATORS "+-*/%<>=^&|"
 #define SCI_NOTATION "Ee+-"
+#define BUFFER 100
 
-typedef enum {
+typedef enum token {
     IDENT,
     NUMBER,
     PLUS,
@@ -32,9 +33,10 @@ typedef enum {
     EOF_
 } Token;
 
-typedef struct {
-    Token token;
+typedef struct token_pair {
+    enum token token;
     char *value;
+    struct token_pair *next;
 } TokenPair;
 
 /*TokenPair **/void tokenize(char *line);
