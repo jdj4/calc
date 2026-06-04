@@ -13,6 +13,7 @@ typedef enum token {
     PLUS,
     MINUS,
     MULT,
+    EXP,
     DIV,
     INTDIV,
     MOD,
