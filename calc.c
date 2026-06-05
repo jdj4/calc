@@ -42,8 +42,9 @@ int main(int argc, char *argv[]) {
                 // TODO: Parse
             }
             //DEBUG
+            printf("DEBUG: ");
             for (TokenPair *curr = tokens; curr != NULL; curr = curr->next) {
-                printf("DEBUG: %s", curr->value);
+                printf("%s ", curr->value);
             }
             break;
         }

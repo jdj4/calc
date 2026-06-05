@@ -197,8 +197,6 @@ TokenPair *scan_operator(char **op) {
 }
 
 TokenPair *tokenize(char *line) {
-    //TokenPair *tokens[100] = { NULL };
-    //int i = 0;//, prev_digit = 0, prev_letter = 0;
     int first = 1;
     TokenPair *head = NULL, *tail = NULL, *token, *error;
     for (char *ptr = line; *ptr != '\0'; ) {
@@ -209,20 +207,12 @@ TokenPair *tokenize(char *line) {
         }
         
         if (isdigit(*ptr) || (first && (*ptr == '-' || *ptr == '+'))) {
-            //TokenPair *pair = scan_number(ptr);
-            //printf("%s\n", pair->value);
-            //prev_digit = 1;
-            //prev_letter = 0;
             token = scan_number(&ptr);
             printf("NUMBER: %s\n", token->value);
         } else if (isalpha(*ptr) || *ptr == '_') {
-            //prev_digit = 0;
-            //prev_letter = 1;
             token = scan_ident(&ptr);
             printf("IDENT: %s\n", token->value);
         } else if (contains(OPERATORS, *ptr)) {
-            //prev_digit = 0;
-            //prev_letter = 0;
             token = scan_operator(&ptr);
             printf("OP: %s\n", token->value);
         } else {
