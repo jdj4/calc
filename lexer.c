@@ -175,43 +175,72 @@ TokenPair *scan_operator(char **op) {
                 (*op)++;
             }
             break;
+        case '(':
+            pair->token = LPAREN;
+            pair->value = "(";
+            (*op)++;
+            break;
+        case ')':
+            pair->token = RPAREN;
+            pair->value = ")";
+            (*op)++;
+            break;
+        case ',':
+            pair->token = COMMA;
+            pair->value = ",";
+            (*op)++;
+            break;
         default:
             break;
     }
     return pair;
 }
 
-/*TokenPair **/void tokenize(char *line) {
-    TokenPair *tokens[100] = { NULL };
-    int i = 0, prev_digit = 0, prev_letter = 0;
+TokenPair *tokenize(char *line) {
+    //TokenPair *tokens[100] = { NULL };
+    //int i = 0;//, prev_digit = 0, prev_letter = 0;
+    int first = 1;
+    TokenPair *head = NULL, *tail = NULL, *token, *error;
     for (char *ptr = line; *ptr != '\0'; ) {
+        token = NULL;
         if (isspace(*ptr)) {
             ptr++;
             continue;
         }
         
-        if (isdigit(*ptr) || (i == 0 && (*ptr == '-' || *ptr == '+'))) {
+        if (isdigit(*ptr) || (first && (*ptr == '-' || *ptr == '+'))) {
             //TokenPair *pair = scan_number(ptr);
             //printf("%s\n", pair->value);
-            prev_digit = 1;
-            prev_letter = 0;
-            tokens[i] = scan_number(&ptr);
-            printf("NUMBER: %s\n", tokens[i]->value);
+            //prev_digit = 1;
+            //prev_letter = 0;
+            token = scan_number(&ptr);
+            printf("NUMBER: %s\n", token->value);
         } else if (isalpha(*ptr) || *ptr == '_') {
-            prev_digit = 0;
-            prev_letter = 1;
-            tokens[i] = scan_ident(&ptr);
-            printf("IDENT: %s\n", tokens[i]->value);
+            //prev_digit = 0;
+            //prev_letter = 1;
+            token = scan_ident(&ptr);
+            printf("IDENT: %s\n", token->value);
         } else if (contains(OPERATORS, *ptr)) {
-            prev_digit = 0;
-            prev_letter = 0;
-            tokens[i] = scan_operator(&ptr);
-            printf("OP: %s\n", tokens[i]->value);
+            //prev_digit = 0;
+            //prev_letter = 0;
+            token = scan_operator(&ptr);
+            printf("OP: %s\n", token->value);
         } else {
-            ptr++;
-            fprintf(stderr, "SyntaxError\n"); // TODO: maybe return special SyntaxError struct
-            break;
+            error = malloc(sizeof(TokenPair)); // TODO: memcheck
+            error->token = SYNTAX_ERROR;
+            error->value = "SyntaxError: invalid syntax";
+            return error;
         }
-        i++;
+        first = 0;
+        
+        token->next = NULL;
+        if (head == NULL) {
+            head = token;
+            tail = token;
+        } else {
+            tail->next = token;
+            tail = token;
+        }
     }
+    return head;
 }

@@ -3,7 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 
-#define OPERATORS "+-*/%<>=^&|"
+#define OPERATORS "+-*/%<>=^&|(),"
 #define SCI_NOTATION "Ee+-"
 #define BUFFER 100
 
@@ -29,8 +29,10 @@ typedef enum token {
     BITOR,
     AND,
     OR,
-    LBRACK,
-    RBRACK,
+    LPAREN,
+    RPAREN,
+    COMMA,
+    SYNTAX_ERROR,
     EOF_
 } Token;
 
@@ -40,4 +42,8 @@ typedef struct token_pair {
     struct token_pair *next;
 } TokenPair;
 
-/*TokenPair **/void tokenize(char *line);
+typedef struct token_list {
+    struct token_pair *head;
+} TokenList;
+
+TokenPair *tokenize(char *line);

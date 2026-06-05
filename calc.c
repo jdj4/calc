@@ -35,8 +35,16 @@ int main(int argc, char *argv[]) {
     while (!feof(stdin)) {
         printf(">>> ");
         while (getline(&line, &n, stdin) > 0) {
-            tokenize(line);
-            printf("%s", line);
+            tokens = tokenize(line);
+            if (tokens->token == SYNTAX_ERROR) {
+                fprintf(stderr, "%s\n", tokens->value);
+            } else {
+                // TODO: Parse
+            }
+            //DEBUG
+            for (TokenPair *curr = tokens; curr != NULL; curr = curr->next) {
+                printf("DEBUG: %s", curr->value);
+            }
             break;
         }
     }
